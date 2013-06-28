@@ -13,7 +13,7 @@ My "paperless-office" workflow looks something like this...
    series of shell commands to rename the files and sort them into
    appropriate directories.
 
-3. Dump paper in long term storage.
+3. Dump paper into long term storage.
 
 Autofile runs on simple sorting rules.  I have enough rules on my
 system that it catches virtually all recurring mail and expense
@@ -27,9 +27,12 @@ Modify *scanner-file* in autofile.lisp to point to your filing rules.
       ;; What follows are a series of 3 element lists.
     
       ;; The three elements are as follows:
-      ;; 1. The format string for the new file name.
+      ;; 1. The format string for the new file name.  Arguments
+      ;;    to the format string include *target-dir*,
+      ;;    as well as year, month and day as extracted by the 
+      ;;    third element, below.
       ;; 2. A list of regexps that must match in the PDF.
-      ;; 3. A regexp to extract the data from the document.  This	
+      ;; 3. A regexp to extract the date from the document.  This	
       ;;    date is used in generating the new filename.
     
       ;; Here are some examples:
