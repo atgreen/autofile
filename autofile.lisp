@@ -1,3 +1,5 @@
+#!/home/green/sbcl-script --script
+
 ;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: autofile; Base: 10 -*-
 
 ;;; Copyright (C) 2013  Anthony Green <green@moxielogic.com>
@@ -59,6 +61,21 @@
 ;; Load the scanner definitions.
 (load *scanner-file*)
 
+(defun replace-all (string part replacement &key (test #'char=))
+"Returns a new string in which all the occurences of the part 
+is replaced with replacement."
+    (with-output-to-string (out)
+      (loop with part-length = (length part)
+            for old-pos = 0 then (+ pos part-length)
+            for pos = (search part string
+                              :start2 old-pos
+                              :test test)
+            do (write-string string out
+                             :start old-pos
+                             :end (or pos (length string)))
+            when pos do (write-string replacement out)
+            while pos))) 
+
 (defun test-rulez (scan-rule contents)
   (let ((new-filename-format (car scan-rule))
 	(scan-list (car (cdr scan-rule)))
@@ -76,7 +93,7 @@
 		  (scan-to-strings date-match contents)
 		(declare (ignore match))
 		(if (not (eq nil date))
-		    (let ((utc (net.telent.date:parse-time (aref date 0))))
+		    (let ((utc (net.telent.date:parse-time (replace-all (aref date 0) "." "-"))))
 		      (net.telent.date:with-decoding 
 		       (utc)
 		       (format nil new-filename-format
